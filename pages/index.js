@@ -2,23 +2,26 @@ import Head from 'next/head'
 import styles from '../styles/Home.module.css'
 
 export default function Home({ data }) {
-  console.log(data)
+  const sats_per_cent = data.data.sats_per_cent.toFixed(2);
+  const cents_per_sat = data.data.cent_per_sat.toFixed(2);
+  const yes_or_no = sats_per_cent < 1 ? "Yes" : "No";
+  
   return (
     <div className={styles.container}>
       <Head>
-        <title>Create Next App</title>
+        <title>Sat cent parity?</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
       <main className={styles.main}>
         <h1 className={styles.title}>
-          No
+          {yes_or_no}
         </h1>
 
         <p className={styles.description}>
-          One cent is worth ≈ {`${data.data.sats_per_cent.toFixed(0)} sats`}
+          One cent is worth ≈ {`${sats_per_cent} sats`}
           <br />
-          One sat is worth ≈ {`${data.data.cent_per_sat.toFixed(2)} cents`}
+          One sat is worth ≈ {`${cents_per_sat} cents`}
         </p>
         <p className={styles.description}>
         </p>
