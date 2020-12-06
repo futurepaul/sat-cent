@@ -4,10 +4,10 @@ import styles from '../styles/Home.module.css'
 export default function Home({ data }) {
   const sats_per_cent = data.data.sats_per_cent.toFixed(2);
   const cents_per_sat = data.data.cent_per_sat.toFixed(2);
-  const yes_or_no = sats_per_cent < 1 ? "Yes" : "No";
+  const yes_or_no = sats_per_cent < 1;
   
   return (
-    <div className={styles.container}>
+    <div className={yes_or_no ? styles.yes : styles.no}>
       <Head>
         <title>Sat cent parity?</title>
         <link rel="icon" href="/favicon.ico" />
@@ -15,7 +15,7 @@ export default function Home({ data }) {
 
       <main className={styles.main}>
         <h1 className={styles.title}>
-          {yes_or_no}
+          {yes_or_no ? "Yes" : "No"}
         </h1>
 
         <p className={styles.description}>
