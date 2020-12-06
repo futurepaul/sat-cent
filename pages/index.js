@@ -8,8 +8,8 @@ const fetcher = (...args) => fetch(...args).then(res => res.json());
 
 export default function Home() {
   const { data, error } = useSWR(KRAKEN_API, fetcher, { refreshInterval: 10000 });
-  if (error) return <div>Failed to load price from API</div>;
-  if (!data) return <div>Loading...</div>;
+  if (error) return <div className={styles.no}>Failed to load price from API</div>;
+  if (!data) return <div className={styles.no}>Loading...</div>;
 
   const price_usd = data.result.XXBTZUSD.c[0];
 
