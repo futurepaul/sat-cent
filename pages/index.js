@@ -1,7 +1,8 @@
 import Head from 'next/head'
 import styles from '../styles/Home.module.css'
 
-export default function Home() {
+export default function Home({ data }) {
+  console.log(data)
   return (
     <div className={styles.container}>
       <Head>
@@ -11,55 +12,46 @@ export default function Home() {
 
       <main className={styles.main}>
         <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
+          No
         </h1>
 
         <p className={styles.description}>
-          Get started by editing{' '}
-          <code className={styles.code}>pages/index.js</code>
+          One cent is worth ≈ {`${data.data.sats_per_cent.toFixed(0)} sats`}
+          <br />
+          One sat is worth ≈ {`${data.data.cent_per_sat.toFixed(2)} cents`}
         </p>
-
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h3>Documentation &rarr;</h3>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h3>Learn &rarr;</h3>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/master/examples"
-            className={styles.card}
-          >
-            <h3>Examples &rarr;</h3>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/import?filter=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h3>Deploy &rarr;</h3>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
-        </div>
+        <p className={styles.description}>
+        </p>
       </main>
-
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <img src="/vercel.svg" alt="Vercel Logo" className={styles.logo} />
-        </a>
-      </footer>
     </div>
   )
+}
+
+const KrakenClient = require("kraken-api");
+// No API key required because we're using the Ticker
+const kraken = new KrakenClient("", "");
+
+export async function getServerSideProps(context) {
+  const data = await kraken.api("Ticker", { pair : 'XXBTZUSD' }).then(({error, result}) => {
+    if (error.length > 0) {
+      return { success: false, data: error};
+    } else {
+      const price_usd = result.XXBTZUSD.a[0];
+      const sats_per_dollar = 100_000_000 / price_usd;
+      const sats_per_cent = 1_000_000 / price_usd;
+      const cent_per_sat = price_usd * 100 / 100_000_000;
+      return { success: true, data: { price_usd, cent_per_sat, sats_per_dollar, sats_per_cent }};
+    }
+  });
+
+  if (!data) {
+    return {
+      notFound: true,
+    }
+  }
+
+  return {
+    props: { data }, // will be passed to the page component as props
+    revalidate: 1
+  }
 }
