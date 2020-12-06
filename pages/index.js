@@ -31,7 +31,7 @@ const KrakenClient = require("kraken-api");
 // No API key required because we're using the Ticker
 const kraken = new KrakenClient("", "");
 
-export async function getServerSideProps(context) {
+export async function getStaticProps(context) {
   const data = await kraken.api("Ticker", { pair : 'XXBTZUSD' }).then(({error, result}) => {
     if (error.length > 0) {
       return { success: false, data: error};
