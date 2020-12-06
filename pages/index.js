@@ -38,7 +38,7 @@ export default function Home() {
         </h2>
         <Image src="/cent.png" alt="One cent" width={256} height={256} />
         <h1 className={styles.title}>
-          {yes_or_no ? "Yes" : "No"}
+          {yes_or_no ? "yes" : "not yet."}
         </h1>
 
         <p className={styles.description}>
