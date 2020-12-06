@@ -15,9 +15,12 @@ export default function Home() {
 
   console.log("Kraken XBTUSD: ", price_usd);
 
+
+  const sats_per_dollar = 100_000_000 / price_usd;
   const sats_per_cent = 1_000_000 / price_usd;
   const cent_per_sat = price_usd * 100 / 100_000_000
 
+  const sats_per_dollar_display = sats_per_dollar.toFixed(0);
   const sats_per_cent_display = sats_per_cent.toFixed(2);
   const cents_per_sat_display = cent_per_sat.toFixed(2);
   const yes_or_no = sats_per_cent < 1;
@@ -39,6 +42,8 @@ export default function Home() {
         </h1>
 
         <p className={styles.description}>
+          dollar ≈ {`${sats_per_dollar_display} sats`}
+          <br />
           cent ≈ {`${sats_per_cent_display} sats`}
           <br />
           sat ≈ {`${cents_per_sat_display} cents`}
