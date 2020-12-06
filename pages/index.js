@@ -1,9 +1,25 @@
 import Head from 'next/head'
+import Image from 'next/image'
 import styles from '../styles/Home.module.css'
+import useSWR from "swr";
 
-export default function Home({ data }) {
-  const sats_per_cent = data.data.sats_per_cent.toFixed(2);
-  const cents_per_sat = data.data.cent_per_sat.toFixed(2);
+const KRAKEN_API = "https://api.kraken.com/0/public/Ticker?pair=XBTUSD";
+const fetcher = (...args) => fetch(...args).then(res => res.json());
+
+export default function Home() {
+  const { data, error } = useSWR(KRAKEN_API, fetcher, { refreshInterval: 10000 });
+  if (error) return <div>Failed to load price from API</div>;
+  if (!data) return <div>Loading...</div>;
+
+  const price_usd = data.result.XXBTZUSD.c[0];
+
+  console.log("Kraken XBTUSD: ", price_usd);
+
+  const sats_per_cent = 1_000_000 / price_usd;
+  const cent_per_sat = price_usd * 100 / 100_000_000
+
+  const sats_per_cent_display = sats_per_cent.toFixed(2);
+  const cents_per_sat_display = cent_per_sat.toFixed(2);
   const yes_or_no = sats_per_cent < 1;
   
   return (
@@ -14,47 +30,24 @@ export default function Home({ data }) {
       </Head>
 
       <main className={styles.main}>
+        <Image src="/cent.png" alt="One cent" width={256} height={256} />
         <h1 className={styles.title}>
           {yes_or_no ? "Yes" : "No"}
         </h1>
 
         <p className={styles.description}>
-          One cent is worth ≈ {`${sats_per_cent} sats`}
+          cent ≈ {`${sats_per_cent_display} sats`}
           <br />
-          One sat is worth ≈ {`${cents_per_sat} cents`}
+          sat ≈ {`${cents_per_sat_display} cents`}
         </p>
         <p className={styles.description}>
         </p>
+
       </main>
+      <footer className={styles.footer}>
+          <p>Price is the latest trade on <a href="https://www.kraken.com/">Kraken.</a> It auto-refreshes every ten seconds.</p>
+          <p>BTC is currently ${(1.0 * price_usd).toFixed(0)}</p>
+        </footer>
     </div>
   )
-}
-
-const KrakenClient = require("kraken-api");
-// No API key required because we're using the Ticker
-const kraken = new KrakenClient("", "");
-
-export async function getStaticProps(context) {
-  const data = await kraken.api("Ticker", { pair : 'XXBTZUSD' }).then(({error, result}) => {
-    if (error.length > 0) {
-      return { success: false, data: error};
-    } else {
-      const price_usd = result.XXBTZUSD.a[0];
-      const sats_per_dollar = 100_000_000 / price_usd;
-      const sats_per_cent = 1_000_000 / price_usd;
-      const cent_per_sat = price_usd * 100 / 100_000_000;
-      return { success: true, data: { price_usd, cent_per_sat, sats_per_dollar, sats_per_cent }};
-    }
-  });
-
-  if (!data) {
-    return {
-      notFound: true,
-    }
-  }
-
-  return {
-    props: { data }, // will be passed to the page component as props
-    revalidate: 10
-  }
 }
