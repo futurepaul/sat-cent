@@ -30,6 +30,9 @@ export default function Home() {
       </Head>
 
       <main className={styles.main}>
+        <h2>
+          Have we reached sat cent parity?
+        </h2>
         <Image src="/cent.png" alt="One cent" width={256} height={256} />
         <h1 className={styles.title}>
           {yes_or_no ? "Yes" : "No"}
