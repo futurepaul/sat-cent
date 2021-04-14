@@ -56,7 +56,6 @@ export default function Home() {
           <Image
             priority
             src="/cent.png"
-            alt="One cent"
             width={256}
             height={256}
             className={styles.behind}
