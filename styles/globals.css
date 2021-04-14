@@ -13,4 +13,12 @@ a {
 
 * {
   box-sizing: border-box;
+  margin: 0;
+}
+
+h1,
+h2,
+p {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
 }

@@ -1,25 +1,57 @@
+.pie {
+  /* Basic layout */
+  z-index: 20;
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: inline-block;
+  width: 256;
+  height: 256;
+  border-radius: 50%;
+
+  /* fixes a minor clipping issue in Chrome */
+  background-origin: border-box;
+  background-image: conic-gradient(
+    rgba(255, 255, 255, 0) calc(3.6deg * var(--segment1)),
+    rgba(255, 99, 71, 0.9) 0 calc(3.6deg * var(--segment2)),
+    rgba(255, 99, 71, 0.9) 0
+  );
+}
+
+.behind {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 10;
+}
+
+.infront {
+  font-size: 1.5rem;
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 50;
+}
+
 .no {
   min-height: 100vh;
-  padding: 0 0.5rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color: tomato; 
+  background-color: tomato;
 }
 
 .yes {
   min-height: 100vh;
-  padding: 0 0.5rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color: mediumspringgreen; 
+  background-color: mediumspringgreen;
 }
 
 .main {
-  padding: 5rem 0;
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -27,9 +59,7 @@
   align-items: center;
 }
 
-
 .title {
-  margin: 0;
   line-height: 1.15;
   font-size: 4rem;
 }
@@ -48,5 +78,5 @@
   font-size: 0.75rem;
   text-align: center;
   opacity: 0.5;
+  margin-bottom: 1rem;
 }
-
